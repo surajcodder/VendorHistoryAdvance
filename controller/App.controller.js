@@ -11,7 +11,7 @@ sap.ui.define([
 		    console.log("App Controller onInit called");
 
 			// Load metadata for the default OData model (defined in manifest)
-			this._loadAllModelMetadata();
+			this._loadAllModelMetadata(); 
 		},
 
 		_loadAllModelMetadata: function() {
