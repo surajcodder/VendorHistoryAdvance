@@ -1,0 +1,60 @@
+<core:FragmentDefinition xmlns:suite="sap.suite.ui.commons" xmlns:m="sap.m" xmlns:core="sap.ui.core" xmlns:table="sap.ui.table"
+	xmlns:viz="sap.viz.ui5.controls" xmlns:vizData="sap.viz.ui5.data" xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds">
+	<suite:ChartContainer id="chartContainer5" showFullScreen="true" showPersonalization="false" autoAdjustHeight="false"
+		showLegendButton="false" title="Creditors">
+		<suite:content>
+			<!-- Chart View -->
+			<suite:ChartContainerContent icon="sap-icon://bar-chart" title="Chart View">
+				<suite:content>
+					<viz:VizFrame id="idCreditorChart" vizType="column" height="380px" width="100%" uiConfig="{applicationSet:'fiori'}">
+						<viz:dependents>
+							<viz:Popover id="idCreditorPopover"/>
+						</viz:dependents>
+						<viz:dataset>
+							<vizData:FlattenedDataset data="{creditorData>/}">
+								<vizData:dimensions>
+<vizData:DimensionDefinition name="Vendor Name" value="{creditorData>Lifnr}" displayValue="{creditorData>Name1}"/>
+
+								</vizData:dimensions>
+								<vizData:measures>
+									<vizData:MeasureDefinition name="Amount (₹ L)" value="{creditorData>Creditor}"/>
+								</vizData:measures>
+							</vizData:FlattenedDataset>
+						</viz:dataset>
+						<viz:feeds>
+							<vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Amount (₹ L)"/>
+							<vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Vendor Name"/>
+						</viz:feeds>
+					</viz:VizFrame>
+				</suite:content>
+			</suite:ChartContainerContent>
+			<!-- Table View -->
+			<suite:ChartContainerContent icon="sap-icon://table-chart" title="Table View">
+				<suite:content>
+					<table:Table id="idTable" rows="{creditorData>/}" selectionMode="None">
+						<table:columns>
+								<table:Column>
+								<m:Label text="Vendor"/>
+								<table:template>
+									<m:Text text="{creditorData>Lifnr}"/>
+								</table:template>
+							</table:Column>
+							<table:Column>
+								<m:Label text="Vendor Name"/>
+								<table:template>
+									<m:Text text="{creditorData>Name1}"/>
+								</table:template>
+							</table:Column>
+							<table:Column>
+								<m:Label text="Amount (₹ L)"/>
+								<table:template>
+									<m:Text text="{creditorData>Creditor}"/>
+								</table:template>
+							</table:Column>
+						</table:columns>
+					</table:Table>
+				</suite:content>
+			</suite:ChartContainerContent>
+		</suite:content>
+	</suite:ChartContainer>
+</core:FragmentDefinition>

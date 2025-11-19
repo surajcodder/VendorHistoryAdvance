@@ -1,0 +1,60 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:m="sap.m" xmlns:suite="sap.suite.ui.commons" xmlns:table="sap.ui.table"
+	xmlns:viz="sap.viz.ui5.controls" xmlns:vizData="sap.viz.ui5.data" xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds">
+	<suite:ChartContainer id="chartContainer3" showFullScreen="true" showPersonalization="false" autoAdjustHeight="false"
+		showLegendButton="false" title="Top 10 Vendor Advance">
+		<suite:content>
+			<!-- 📊 Chart View -->
+			<suite:ChartContainerContent icon="sap-icon://bar-chart" title="Chart View">
+				<suite:content>
+					<viz:VizFrame id="idTop10VendorChart" vizType="column" height="400px" width="100%" uiConfig="{applicationSet:'fiori'}">
+						<!-- Optional: Tooltip Popover -->
+						<viz:dependents>
+							<viz:Popover id="idTop10VendorPopOver"/>
+						</viz:dependents>
+						<viz:dataset>
+							<vizData:FlattenedDataset data="{top10VendorAdvanceData>/}">
+								<vizData:dimensions>
+									<vizData:DimensionDefinition name="Vendor Name" value="{top10VendorAdvanceData>Lifnr}" displayValue="{top10VendorAdvanceData>Name1}"/>
+								</vizData:dimensions>
+								<vizData:measures>
+									<vizData:MeasureDefinition name="Amount (₹ L)" value="{top10VendorAdvanceData>vend_adv}"/>
+								</vizData:measures>
+							</vizData:FlattenedDataset>
+						</viz:dataset>
+						<viz:feeds>
+							<vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Amount (₹ L)"/>
+							<vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Vendor Name"/>
+						</viz:feeds>
+					</viz:VizFrame>
+				</suite:content>
+			</suite:ChartContainerContent>
+			<!-- 📋 Table View -->
+			<suite:ChartContainerContent icon="sap-icon://table-chart" title="Table View">
+				<suite:content>
+					<table:Table id="idTop10VendorTable" rows="{top10VendorAdvanceData>/}" selectionMode="None" visibleRowCount="10">
+						<table:columns>
+								<table:Column>
+								<m:Label text="Vendor"/>
+								<table:template>
+									<m:Text text="{top10VendorAdvanceData>Lifnr}"/>
+								</table:template>
+							</table:Column>
+							<table:Column>
+								<m:Label text="Vendor Name"/>
+								<table:template>
+									<m:Text text="{top10VendorAdvanceData>Name1}"/>
+								</table:template>
+							</table:Column>
+							<table:Column>
+								<m:Label text="Amount (₹ L)"/>
+								<table:template>
+									<m:Text text="{top10VendorAdvanceData>vend_adv}"/>
+								</table:template>
+							</table:Column>
+						</table:columns>
+					</table:Table>
+				</suite:content>
+			</suite:ChartContainerContent>
+		</suite:content>
+	</suite:ChartContainer>
+</core:FragmentDefinition>

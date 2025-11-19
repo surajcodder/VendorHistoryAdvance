@@ -1,0 +1,60 @@
+<core:FragmentDefinition xmlns:suite="sap.suite.ui.commons" xmlns:m="sap.m" xmlns:core="sap.ui.core" xmlns:table="sap.ui.table"
+	xmlns:viz="sap.viz.ui5.controls" xmlns:vizData="sap.viz.ui5.data" xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds">
+	<suite:ChartContainer id="chartContainerTop10RXIL" showFullScreen="true" showPersonalization="false" autoAdjustHeight="false"
+		showLegendButton="false" title="Top 10 RXIL">
+		<suite:content>
+			<!-- Chart Content -->
+			<suite:ChartContainerContent icon="sap-icon://bar-chart" title="Chart View">
+				<suite:content>
+					<viz:VizFrame id="idTop10RXILVizFrame" vizType="column" height="380px" width="100%" uiConfig="{applicationSet:'fiori'}">
+						<viz:dependents>
+							<viz:Popover id="idTop10RXILPopOver"></viz:Popover>
+						</viz:dependents>
+						<viz:dataset>
+							<vizData:FlattenedDataset data="{top10RXILData>/}">
+								<vizData:dimensions>
+									<!-- Use DisplayVendor instead of Name1 -->
+									<vizData:DimensionDefinition name="Vendor Name" value="{top10RXILData>DisplayVendorKey}" displayValue="{top10RXILData>DisplayVendor}"/>
+								</vizData:dimensions>
+								<vizData:measures>
+									<vizData:MeasureDefinition name="Amount (₹ L)" value="{top10RXILData>Rxil}"/>
+								</vizData:measures>
+							</vizData:FlattenedDataset>
+						</viz:dataset>
+						<viz:feeds>
+							<vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Amount (₹ L)"/>
+							<vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Vendor Name"/>
+						</viz:feeds>
+					</viz:VizFrame>
+				</suite:content>
+			</suite:ChartContainerContent>
+			<!-- Table Content -->
+			<suite:ChartContainerContent icon="sap-icon://table-chart" title="Table View">
+				<suite:content>
+					<table:Table id="idTop10RXILTable" rows="{top10RXILData>/}" selectionMode="None">
+						<table:columns>
+							<table:Column>
+								<m:Label text="Vendor"/>
+								<table:template>
+									<m:Text text="{top10RXILData>Lifnr}"/>
+								</table:template>
+							</table:Column>
+							<table:Column>
+								<m:Label text="Vendor Name"/>
+								<table:template>
+									<m:Text text="{top10RXILData>Name1}"/>
+								</table:template>
+							</table:Column>
+							<table:Column>
+								<m:Label text="Amount (₹ L)"/>
+								<table:template>
+									<m:Text text="{top10RXILData>Rxil}"/>
+								</table:template>
+							</table:Column>
+						</table:columns>
+					</table:Table>
+				</suite:content>
+			</suite:ChartContainerContent>
+		</suite:content>
+	</suite:ChartContainer>
+</core:FragmentDefinition>

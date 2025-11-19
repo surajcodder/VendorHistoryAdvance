@@ -1,0 +1,448 @@
+<mvc:View xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core"
+	xmlns:f="sap.ui.layout.form" xmlns:viz="sap.viz.ui5.controls" xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+	xmlns:viz.data="sap.viz.ui5.data" xmlns:chart="sap.suite.ui.commons" controllerName="com.infocus.vendorAdvance.controller.Home">
+	<Page id="page" enableScrolling="true" showNavButton="false" navButtonPress="onNavBack" showFooter="false" titleLevel="H1">
+		<customHeader>
+			<Bar>
+				<contentMiddle>
+					<Title text="Supplier Analysis" level="H2" titleStyle="H2" class="customTitleCenter"/>
+				</contentMiddle>
+			</Bar>
+		</customHeader>
+		<content>
+			<FlexBox id="panelFormBox" direction="Column" height="auto" justifyContent="Center" alignItems="Center"
+				class="sapUiTinyMarginTop sapUiSizeCompact">
+				<items>
+					<!-- Radio Button Section -->
+					<!--<FlexBox width="auto" id="RadioBtn" wrap="NoWrap" justifyContent="Center" alignItems="Center">
+						<RadioButtonGroup id="radioBtnlist" columns="4" select="onRadioButtonSelectList" class="styledRadioGroup">
+							<RadioButton id="fiscalYearWise" text="Fiscal Year Wise"/>
+							<RadioButton id="quaterlyWise" text="Quaterly Wise"/>
+							<RadioButton id="supplierDue" text="Supplier Due"/>
+							<RadioButton id="supplierDueQtrFy" text="Supplier Due QTR/FY"/>
+						</RadioButtonGroup>
+					</FlexBox>-->
+					<!-- Input Fields Section -->
+					<FlexBox width="auto" id="inputBoxes" wrap="NoWrap" justifyContent="Center" alignItems="Center">
+						<HBox id="companyCodeMasterBox" direction="Column" alignItems="Center" visible="true" class="sapUiTinyMarginBegin">
+							<Input id="_companyCodeInputId" type="Text" tooltip="Select from list" placeholder="Company Code" class="boldText roundedInput"
+								showValueHelp="true" showClearIcon="true" value="{globalData>/selectedCompanyCodeNamesDisplay}"
+								valueHelpRequest="handleValueCompanyCodeMaster" required="true" valueHelpOnly="true"/>
+						</HBox>
+						<HBox id="venderMasterBox" direction="Column" alignItems="Center" visible="true" class="sapUiTinyMarginBegin">
+							<Input id="_VenderInputId" type="Text" tooltip="Select from list" placeholder="Vender Code" class="boldText roundedInput"
+								showValueHelp="true" showClearIcon="true" value="{globalData>/selectedVenderNamesDisplay}" valueHelpRequest="handleValueVenderMaster"
+								required="true" valueHelpOnly="true"/>
+						</HBox>
+						<HBox id="accountGroupBox" direction="Column" alignItems="Center" visible="true" class="sapUiTinyMarginBegin">
+							<Input id="_accountGroupId" type="Text" tooltip="Select from list" placeholder="Account Group" class="boldText roundedInput"
+								showValueHelp="true" showClearIcon="true" value="{globalData>/selectedAccountGroupDisplay}" valueHelpRequest="handleValueAccountGroup"
+								required="true" valueHelpOnly="true"/>
+						</HBox>
+						<HBox id="venderDatePickerBox" direction="Column" alignItems="Center" visible="true" class="sapUiTinyMarginBegin">
+							<DatePicker id="_venderDatePickerId" value="{globalData>/selectedVenderDate}" placeholder="Select Due Date" required="true"
+								tooltip="Select from list" class="boldText roundedInput" change="onVenderDateChange" displayFormat="dd.MM.yyyy" valueFormat="yyyyMMdd"/>
+						</HBox>
+						<HBox id="reportTypeBox" direction="Column" alignItems="Center" visible="true" class="sapUiTinyMarginBegin">
+							<Select id="_reportTypeSelect" forceSelection="true" selectedKey="{selectedPanelModel>/selectedPanel}" change=".handleReportTypeChange"
+								class="boldText roundedInput" tooltip="Select from dropdown">
+								<items>
+									<core:Item key="panel1" text="Still to be Delivered"/>
+									<core:Item key="panel2" text="Vendor Advance"/>
+									<core:Item key="panel3" text="Creditors"/>
+									<core:Item key="panel4" text="LC"/>
+									<core:Item key="panel5" text="Factoring"/>
+									<core:Item key="panel6" text="RXIL"/>
+									<core:Item key="panel7" text="ABG"/>
+									<core:Item key="panel8" text="PBG"/>
+									<core:Item key="panelSummary" text="Summary"/>
+								</items>
+							</Select>
+						</HBox>
+						<!-- Action Buttons (Search and Clear) -->
+						<HBox id="buttonBox" direction="Row" justifyContent="Center" alignItems="Center">
+							<Button id="searchData" icon="sap-icon://time-account" press="onPress" type="Accept" class="sapUiTinyMarginBegin flatGlowButton greenGlow"
+								tooltip="Execute"/>
+							<Button id="clearData" icon="sap-icon://delete" press="clearListData" type="Reject" class="sapUiTinyMarginBegin flatGlowButton redGlow"
+								tooltip="Clear All Data"/>
+						</HBox>
+					</FlexBox>
+				</items>
+			</FlexBox>
+			<!-- Panel for Still to be Delivered view -->
+			<Panel id="panel1" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
+				<content>
+					<!-- IconTabBar for switching between scenarios -->
+					<IconTabBar id="iconTabBar1" selectedKey="{globalData>/selectedStillToBeDeliveredTabKey}" select="onTabSelectPanel1" stretchContentHeight="true" class="beautifulTabBar"
+						expandable="false" upperCase="false" applyContentPadding="false" showOverflowSelectList="false">
+						<items>
+							<!-- Scenario 1 -->
+							<IconTabFilter key="scenario1" text="Still to be Delivered" icon="sap-icon://shipping-status" tooltip="Still to be Delivered"
+								iconColor="Positive" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment1Visible}">
+										<core:Fragment id="chartFragment1" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Still_to_be_Delivered.ChartFragment1"
+											type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment2Visible}">
+										<core:Fragment id="chartFragment2" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.ChartFragment2" type="XML"/>
+									</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+						</items>
+					</IconTabBar>
+				</content>
+			</Panel>
+			<!-- Panel for Vendor Advance view -->
+			<Panel id="panel2" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
+				<content>
+					<!-- IconTabBar for switching between scenarios -->
+					<IconTabBar id="iconTabBar2" selectedKey="{globalData>/selectedVendorAdvanceTabKey}" select="onTabSelectPanel2" stretchContentHeight="true" class="beautifulTabBar">
+						<items>
+							<!-- Scenario 2 -->
+							<IconTabFilter key="scenario2" text="Vendor Advance" icon="sap-icon://customer" tooltip="Vendor Advance" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment2Visible}">
+										<core:Fragment id="chartFragment2" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Vendor_Advance.ChartFragment2" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment4Visible}">-->
+									<!--	<core:Fragment id="chartFragment4" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment4" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 3 -->
+							<IconTabFilter key="scenario3" text="Top 10 Vendor Advance" icon="sap-icon://group" tooltip="Top 10 Vendor Advance" iconColor="Critical"
+								design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment3Visible}">
+										<core:Fragment id="chartFragment3" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Vendor_Advance.ChartFragment3" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment6Visible}">-->
+									<!--	<core:Fragment id="chartFragment6" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment6" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 4 -->
+							<IconTabFilter key="scenario4" text="Total Vendor Advance" icon="sap-icon://family-care" tooltip="Total Vendor Advance" iconColor="Negative"
+								design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment4Visible}">
+										<core:Fragment id="chartFragment4" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Vendor_Advance.ChartFragment4" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+						</items>
+					</IconTabBar>
+				</content>
+			</Panel>
+			<!-- Panel for Creditor view -->
+			<Panel id="panel3" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
+				<content>
+					<!-- IconTabBar for switching between scenarios -->
+					<IconTabBar id="iconTabBar3" selectedKey="{globalData>/selectedCreditorTabKey}" select="onTabSelectPanel3" stretchContentHeight="true" class="beautifulTabBar">
+						<items>
+							<!-- Scenario 5 -->
+							<IconTabFilter key="scenario5" text="Creditors" icon="sap-icon://wallet" tooltip="Creditors" iconColor="Negative" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment5Visible}">
+										<core:Fragment id="chartFragment5" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Creditor.ChartFragment5" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 6 -->
+							<IconTabFilter key="scenario6" text="Top 10 Creditors" icon="sap-icon://group" tooltip="Top 10 Creditors" iconColor="Critical"
+								design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment6Visible}">
+										<core:Fragment id="chartFragment6" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Creditor.ChartFragment6" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment6Visible}">-->
+									<!--	<core:Fragment id="chartFragment6" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment6" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 7 -->
+							<IconTabFilter key="scenario7" text="Total Creditors" icon="sap-icon://family-care" tooltip="Total Creditors" iconColor="Negative"
+								design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment7Visible}">
+										<core:Fragment id="chartFragment7" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Creditor.ChartFragment7" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+						</items>
+					</IconTabBar>
+				</content>
+			</Panel>
+			<!-- Panel for Letter Of Credit -->
+			<Panel id="panel4" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
+				<content>
+					<!-- IconTabBar for switching between scenarios -->
+					<IconTabBar id="iconTabBar4" selectedKey="{globalData>/selectedLetterOfCreditTabKey}" select="onTabSelectPanel4" stretchContentHeight="true" class="beautifulTabBar">
+						<items>
+							<!-- Scenario 8 -->
+							<IconTabFilter key="scenario8" text="Letter Of Credit" icon="sap-icon://letter" tooltip="Letter Of Credit" iconColor="Negative"
+								design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment8Visible}">
+										<core:Fragment id="chartFragment8" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Letter_of_Credit.ChartFragment8" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 9 -->
+							<IconTabFilter key="scenario9" text="Top 10 Letter Of Credit" icon="sap-icon://group" tooltip="Top 10 Letter Of Credit" iconColor="Critical"
+								design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment9Visible}">
+										<core:Fragment id="chartFragment9" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Letter_of_Credit.ChartFragment9" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment6Visible}">-->
+									<!--	<core:Fragment id="chartFragment6" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment6" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 10 -->
+							<IconTabFilter key="scenario10" text="Total Letter Of Credit" icon="sap-icon://family-care" tooltip="Total Letter Of Credit"
+								iconColor="Negative" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment10Visible}">
+										<core:Fragment id="chartFragment10" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Letter_of_Credit.ChartFragment10" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+						</items>
+					</IconTabBar>
+				</content>
+			</Panel>
+			<!-- Panel for Factoring view -->
+			<Panel id="panel5" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
+				<content>
+					<!-- IconTabBar for switching between scenarios -->
+					<IconTabBar id="iconTabBar5"  selectedKey="{globalData>/selectedFactoringTabKey}" select="onTabSelectPanel5" stretchContentHeight="true" class="beautifulTabBar">
+						<items>
+							<!-- Scenario 11 -->
+							<IconTabFilter key="scenario11" text="Factoring" icon="sap-icon://money-bills" tooltip="Factoring" iconColor="Negative" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment11Visible}">
+										<core:Fragment id="chartFragment11" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Factoring.ChartFragment11" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 12 -->
+							<IconTabFilter key="scenario12" text="Top 10 Factoring" icon="sap-icon://group" tooltip="Top 10 Factoring" iconColor="Critical"
+								design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment12Visible}">
+										<core:Fragment id="chartFragment12" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Factoring.ChartFragment12" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment6Visible}">-->
+									<!--	<core:Fragment id="chartFragment6" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment6" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 13 -->
+							<IconTabFilter key="scenario13" text="Total Factoring" icon="sap-icon://family-care" tooltip="Total Factoring" iconColor="Negative"
+								design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment13Visible}">
+										<core:Fragment id="chartFragment13" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Factoring.ChartFragment13" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+						</items>
+					</IconTabBar>
+				</content>
+			</Panel>
+			<!-- Panel for RXIL view -->
+			<Panel id="panel6" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
+				<content>
+					<!-- IconTabBar for switching between scenarios -->
+					<IconTabBar id="iconTabBar6" selectedKey="{globalData>/selectedRXILTabKey}" select="onTabSelectPanel6" stretchContentHeight="true" class="beautifulTabBar">
+						<items>
+							<!-- Scenario 14 -->
+							<IconTabFilter key="scenario14" text="RXIL" icon="sap-icon://business-objects-experience" tooltip="RXIL" iconColor="Negative"
+								design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment14Visible}">
+										<core:Fragment id="chartFragment14" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.RXIL.ChartFragment14" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 15 -->
+							<IconTabFilter key="scenario15" text="Top 10 RXIL" icon="sap-icon://group" tooltip="Top 10 RXIL" iconColor="Critical" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment15Visible}">
+										<core:Fragment id="chartFragment15" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.RXIL.ChartFragment15" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment6Visible}">-->
+									<!--	<core:Fragment id="chartFragment6" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment6" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 16 -->
+							<IconTabFilter key="scenario16" text="Total RXIL" icon="sap-icon://family-care" tooltip="Total RXIL" iconColor="Negative"
+								design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment16Visible}">
+										<core:Fragment id="chartFragment16" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.RXIL.ChartFragment16" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+						</items>
+					</IconTabBar>
+				</content>
+			</Panel>
+			<!-- Panel for ABG view -->
+			<Panel id="panel7" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
+				<content>
+					<!-- IconTabBar for switching between scenarios -->
+					<IconTabBar id="iconTabBar7" selectedKey="{globalData>/selectedABGTabKey}" select="onTabSelectPanel7" stretchContentHeight="true" class="beautifulTabBar">
+						<items>
+							<!-- Scenario 17 -->
+							<IconTabFilter key="scenario17" text="ABG" icon="sap-icon://building" tooltip="ABG" iconColor="Negative" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment17Visible}">
+										<core:Fragment id="chartFragment17" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.ABG.ChartFragment17" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 18 -->
+							<IconTabFilter key="scenario18" text="Top 10 ABG" icon="sap-icon://group" tooltip="Top 10 ABG" iconColor="Critical" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment18Visible}">
+										<core:Fragment id="chartFragment18" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.ABG.ChartFragment18" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment6Visible}">-->
+									<!--	<core:Fragment id="chartFragment6" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment6" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 19 -->
+							<IconTabFilter key="scenario19" text="Total ABG" icon="sap-icon://family-care" tooltip="Total ABG" iconColor="Negative" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment19Visible}">
+										<core:Fragment id="chartFragment19" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.ABG.ChartFragment19" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+						</items>
+					</IconTabBar>
+				</content>
+			</Panel>
+			<!-- Panel for PBG view -->
+			<Panel id="panel8" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
+				<content>
+					<!-- IconTabBar for switching between scenarios -->
+					<IconTabBar id="iconTabBar8" selectedKey="{globalData>/selectedPBGTabKey}" select="onTabSelectPanel8" stretchContentHeight="true" class="beautifulTabBar">
+						<items>
+							<!-- Scenario 20 -->
+							<IconTabFilter key="scenario20" text="PBG" icon="sap-icon://shield" tooltip="PBG" iconColor="Negative" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment20Visible}">
+										<core:Fragment id="chartFragment20" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.PBG.ChartFragment20" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 21 -->
+							<IconTabFilter key="scenario21" text="Top 10 PBG" icon="sap-icon://group" tooltip="Top 10 PBG" iconColor="Critical" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment21Visible}">
+										<core:Fragment id="chartFragment21" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.PBG.ChartFragment21" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment6Visible}">-->
+									<!--	<core:Fragment id="chartFragment6" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment6" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+							<!-- Scenario 22 -->
+							<IconTabFilter key="scenario22" text="Total PBG" icon="sap-icon://family-care" tooltip="Total PBG" iconColor="Negative" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragment22Visible}">
+										<core:Fragment id="chartFragment22" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.PBG.ChartFragment22" type="XML"/>
+									</VBox>
+									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
+									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
+									<!--</VBox>-->
+								</content>
+							</IconTabFilter>
+							<IconTabSeparator/>
+						</items>
+					</IconTabBar>
+				</content>
+			</Panel>
+			<Panel id="panelSummary" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto"
+				height="100%">
+				<content>
+					<IconTabBar id="scenario23" selectedKey="{globalData>/selectedSummaryTabKey}" stretchContentHeight="true" class="beautifulTabBar">
+						<items>
+							<IconTabFilter key="summaryTab" text="Summary" icon="sap-icon://overview-chart" iconColor="Negative" tooltip="Summary" design="Horizontal">
+								<content>
+									<VBox visible="{globalData>/isChartFragmentSummaryVisible}">
+										<core:Fragment id="chartFragmentSummary" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Summary.ChartFragmentSummary" type="XML"/>
+									</VBox>
+								</content>
+							</IconTabFilter>
+						</items>
+					</IconTabBar>
+				</content>
+			</Panel>
+		</content>
+	</Page>
+</mvc:View>

@@ -1,0 +1,56 @@
+<core:FragmentDefinition xmlns:suite="sap.suite.ui.commons" xmlns:m="sap.m" xmlns:core="sap.ui.core" xmlns:table="sap.ui.table"
+	xmlns:viz="sap.viz.ui5.controls" xmlns:vizData="sap.viz.ui5.data" xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds">
+	<suite:ChartContainer id="chartContainerTotalLC" showFullScreen="true" showPersonalization="false" autoAdjustHeight="false"
+		showLegendButton="false" title="Total Letter of Credit">
+		<!-- 📊 Chart Content -->
+		<suite:ChartContainerContent icon="sap-icon://bar-chart" title="Chart View">
+			<suite:content>
+				<viz:VizFrame id="idTotalLCChart" vizType="column" height="380px" width="100%" uiConfig="{applicationSet:'fiori'}">
+					<!-- Tooltip Popover -->
+					<viz:dependents>
+						<viz:Popover id="idTotalLCPopover"/>
+					</viz:dependents>
+					<!-- Dataset -->
+					<viz:dataset>
+						<vizData:FlattenedDataset data="{totalLCData>/}">
+							<vizData:dimensions>
+								<vizData:DimensionDefinition name="Company Code" value="{totalLCData>Bukrs}"/>
+							</vizData:dimensions>
+							<vizData:measures>
+								<vizData:MeasureDefinition name="Amount (₹ L)" value="{totalLCData>Total}"/>
+							</vizData:measures>
+						</vizData:FlattenedDataset>
+					</viz:dataset>
+					<!-- Feeds -->
+					<viz:feeds>
+						<vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Amount (₹ L)"/>
+						<vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Company Code"/>
+					</viz:feeds>
+				</viz:VizFrame>
+			</suite:content>
+		</suite:ChartContainerContent>
+		<!-- 📋 Table Content -->
+		<suite:ChartContainerContent icon="sap-icon://table-chart" title="Table View">
+			<suite:content>
+				<table:Table id="idTotalLCTable" rows="{totalLCData>/}" selectionMode="None" visibleRowCount="10">
+					<table:columns>
+						<!-- Company Code -->
+						<table:Column>
+							<m:Label text="Company Code"/>
+							<table:template>
+								<m:Text text="{totalLCData>Bukrs}"/>
+							</table:template>
+						</table:Column>
+						<!-- LC Amount -->
+						<table:Column>
+							<m:Label text="Amount (₹ L)"/>
+							<table:template>
+								<m:Text text="{totalLCData>Total}"/>
+							</table:template>
+						</table:Column>
+					</table:columns>
+				</table:Table>
+			</suite:content>
+		</suite:ChartContainerContent>
+	</suite:ChartContainer>
+</core:FragmentDefinition>

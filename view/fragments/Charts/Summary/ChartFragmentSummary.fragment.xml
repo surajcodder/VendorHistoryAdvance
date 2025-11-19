@@ -1,0 +1,53 @@
+<core:FragmentDefinition xmlns:suite="sap.suite.ui.commons" xmlns:m="sap.m" xmlns:core="sap.ui.core" xmlns:table="sap.ui.table"
+	xmlns:viz="sap.viz.ui5.controls" xmlns:vizData="sap.viz.ui5.data" xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds">
+	<suite:ChartContainer id="chartContainerSummary" showFullScreen="true" showPersonalization="false" autoAdjustHeight="false"
+		showLegendButton="false" title="Summary">
+		<!-- Chart View -->
+		<suite:ChartContainerContent icon="sap-icon://bar-chart" title="Chart View">
+			<suite:content>
+				<viz:VizFrame id="idSummaryChart" vizType="column" height="380px" width="100%" uiConfig="{applicationSet:'fiori'}">
+					<viz:dependents>
+						<viz:Popover id="idSummaryPopover"/>
+					</viz:dependents>
+					<viz:dataset>
+						<vizData:FlattenedDataset data="{summaryData>/}">
+							<vizData:dimensions>
+								<vizData:DimensionDefinition name="Type of Vendor Form" value="{summaryData>reportType}"/>
+							</vizData:dimensions>
+							<vizData:measures>
+								<vizData:MeasureDefinition name="Amount (₹)" value="{summaryData>amount}"/>
+							</vizData:measures>
+						</vizData:FlattenedDataset>
+					</viz:dataset>
+					<viz:feeds>
+						<vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Amount (₹)"/>
+						<vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Type of Vendor Form"/>
+					</viz:feeds>
+				</viz:VizFrame>
+			</suite:content>
+		</suite:ChartContainerContent>
+		<!-- Table View -->
+		<suite:ChartContainerContent icon="sap-icon://table-chart" title="Table View">
+			<suite:content>
+				<table:Table id="idSummaryTable" rows="{summaryData>/}" selectionMode="None" visibleRowCount="10">
+					<table:columns>
+						<!-- Report Type Column -->
+						<table:Column>
+							<m:Label text="Type of Vendor Form"/>
+							<table:template>
+								<m:Text text="{summaryData>reportType}"/>
+							</table:template>
+						</table:Column>
+						<!-- Amount Column -->
+						<table:Column>
+							<m:Label text="Amount (₹ L)"/>
+							<table:template>
+								<m:Text text="{summaryData>amount}"/>
+							</table:template>
+						</table:Column>
+					</table:columns>
+				</table:Table>
+			</suite:content>
+		</suite:ChartContainerContent>
+	</suite:ChartContainer>
+</core:FragmentDefinition>

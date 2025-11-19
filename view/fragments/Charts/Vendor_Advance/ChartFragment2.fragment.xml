@@ -1,0 +1,59 @@
+<core:FragmentDefinition xmlns:suite="sap.suite.ui.commons" xmlns:m="sap.m" xmlns:core="sap.ui.core" xmlns:table="sap.ui.table"
+	xmlns:viz="sap.viz.ui5.controls" xmlns:vizData="sap.viz.ui5.data" xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds">
+	<suite:ChartContainer id="chartContainer2" showFullScreen="true" showPersonalization="false" autoAdjustHeight="false"
+		showLegendButton="false" title="Vendor Advance">
+		<suite:content>
+			<!-- 🔹 Chart View -->
+			<suite:ChartContainerContent icon="sap-icon://bar-chart" title="Chart View">
+				<suite:content>
+					<viz:VizFrame id="idVendorAdvanceChart" vizType="column" height="400px" width="100%" uiConfig="{applicationSet:'fiori'}">
+						<viz:dependents>
+							<viz:Popover id="idVendorAdvancePopover"/>
+						</viz:dependents>
+						<viz:dataset>
+							<vizData:FlattenedDataset data="{vendorAdvanceData>/}">
+								<vizData:dimensions>
+								<vizData:DimensionDefinition name="Vendor Name" value="{vendorAdvanceData>Lifnr}" displayValue="{vendorAdvanceData>Name1}"/>
+								</vizData:dimensions>
+								<vizData:measures>
+									<vizData:MeasureDefinition name="Amount (₹ L)" value="{vendorAdvanceData>vend_adv}"/>
+								</vizData:measures>
+							</vizData:FlattenedDataset>
+						</viz:dataset>
+						<viz:feeds>
+							<vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Amount (₹ L)"/>
+							<vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Vendor Name"/>
+						</viz:feeds>
+					</viz:VizFrame>
+				</suite:content>
+			</suite:ChartContainerContent>
+			<!-- 🔹 Table View -->
+			<suite:ChartContainerContent icon="sap-icon://table-chart" title="Table View">
+				<suite:content>
+					<table:Table id="idTable" rows="{vendorAdvanceData>/}" selectionMode="None" visibleRowCount="10">
+						<table:columns>
+								<table:Column>
+								<m:Label text="Vendor"/>
+								<table:template>
+									<m:Text text="{vendorAdvanceData>Lifnr}"/>
+								</table:template>
+							</table:Column>
+							<table:Column>
+								<m:Label text="Vendor Name"/>
+								<table:template>
+									<m:Text text="{vendorAdvanceData>Name1}"/>
+								</table:template>
+							</table:Column>
+							<table:Column>
+								<m:Label text="Amount (₹ L)"/>
+								<table:template>
+									<m:Text text="{vendorAdvanceData>vend_adv}"/>
+								</table:template>
+							</table:Column>
+						</table:columns>
+					</table:Table>
+				</suite:content>
+			</suite:ChartContainerContent>
+		</suite:content>
+	</suite:ChartContainer>
+</core:FragmentDefinition>
