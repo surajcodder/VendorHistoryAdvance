@@ -13,8 +13,8 @@
 				selectionChange=".onSelectionChangeAccountGroup"
 				items="{accountGroupData>/}">
 				<StandardListItem
-					title="{accountGroupData>KTOKK}"
-					description="{accountGroupData>TXT30}"/>
+					title="{accountGroupData>ktokk}"
+					description="{accountGroupData>txt30}"/>
 			</List>
 		</content>
 		<buttons>

@@ -484,9 +484,10 @@ sap.ui.define([
 
 			// Load all datasets in parallel
 			Promise.all([
-					/* this.getVenderMasterParametersData(), */ // Uncomment if needed
+					this.getVenderMasterParametersData(),
 					this.getCompanyCodeMasterParametersData(),
-					this.getVenderGroupParametersData() // <-- Load Account Group data here
+					this.getVenderGroupParametersData(), // Account Group
+					this.getPlantParametersData() // Plant
 				])
 				.then(function() {
 					console.log("All master data loaded successfully.");
@@ -494,6 +495,10 @@ sap.ui.define([
 					// Optional: inspect Account Group data
 					var oAccountGroupModel = that.getOwnerComponent().getModel("accountGroupData");
 					console.log("Account Group Data:", oAccountGroupModel.getData());
+
+					// Optional: inspect Plant data
+					var oPlantModel = that.getOwnerComponent().getModel("plantData");
+					console.log("Plant Data:", oPlantModel.getData());
 				})
 				.catch(function(err) {
 					console.error("Error loading initial data:", err);
@@ -573,20 +578,18 @@ sap.ui.define([
 		/*************** get parameters data *****************/
 
 		getVenderMasterParametersData: function() {
-			var that = this;
-			var oModel = this.getOwnerComponent().getModel();
+			var oModel = this.getOwnerComponent().getModel("Z_INF_VEND_ANAL_SRV");
 			var oVenderMasterModel = this.getOwnerComponent().getModel("venderMasterData");
 			var oGlobalData = this.getOwnerComponent().getModel("globalData").getData();
 			var aSelectedCompanyCodes = oGlobalData.selectedCompanyCodeIDs || [];
-			var sUrl = "/es_f4lifnrset";
+			var sUrl = "/vendorCode_F4Set";
 
 			return new Promise(function(resolve, reject) {
 				if (!oModel || !oVenderMasterModel) {
-					reject("Could not access required models for fetching Vender data.");
+					reject("Could not access required models for fetching Vendor Data.");
 					return;
 				}
 
-				// Apply filter (bukrs eq '1100')
 				var aFilters = [
 					new sap.ui.model.Filter("bukrs", sap.ui.model.FilterOperator.EQ, aSelectedCompanyCodes[0])
 				];
@@ -595,29 +598,26 @@ sap.ui.define([
 					filters: aFilters,
 					success: function(oResponse) {
 						var aResults = oResponse && oResponse.results ? oResponse.results : [];
-						aResults.sort(function(a, b) {
-							return parseInt(a.lifnr, 10) - parseInt(b.lifnr, 10);
-						});
 						oVenderMasterModel.setData(aResults || []);
-						console.log("Vender master data loaded:", aResults);
+						console.log("Vendor master data loaded:", aResults);
 						resolve();
 					},
 					error: function(oError) {
-						console.error("Error fetching Vender master data:", oError);
-						reject("Failed to fetch Vender master data.");
+						console.error("Error fetching Vendor master data:", oError);
+						reject("Failed to fetch Vendor master data.");
 					}
 				});
 			});
 		},
+
 		getCompanyCodeMasterParametersData: function() {
-			var that = this;
-			var oModel = this.getOwnerComponent().getModel();
+			var oModel = this.getOwnerComponent().getModel("Z_INF_VEND_ANAL_SRV");
 			var oCompanyCodeMasterModel = this.getOwnerComponent().getModel("companyCodeMasterData");
-			var sUrl = "/es_f4bukrsset";
+			var sUrl = "/companyCode_F4Set";
 
 			return new Promise(function(resolve, reject) {
 				if (!oModel || !oCompanyCodeMasterModel) {
-					reject("Could not access required models for fetching Company Code data.");
+					reject("Could not access required models for fetching Company Code Data.");
 					return;
 				}
 
@@ -665,9 +665,9 @@ sap.ui.define([
 
 		getVenderGroupParametersData: function() {
 			var that = this;
-			var oModel = this.getOwnerComponent().getModel("ZVENDOR_ADVANCE_SRV");
+			var oModel = this.getOwnerComponent().getModel("Z_INF_VEND_ANAL_SRV");
 			var oAccountGroupModel = this.getOwnerComponent().getModel("accountGroupData");
-			var sUrl = "/es_ven_grpSet";
+			var sUrl = "/acountGrp_F4Set";
 
 			return new Promise(function(resolve, reject) {
 				if (!oModel || !oAccountGroupModel) {
@@ -685,6 +685,33 @@ sap.ui.define([
 					error: function(oError) {
 						console.error("Error fetching Account Group data:", oError);
 						reject("Failed to fetch Account Group data.");
+					}
+				});
+			});
+		},
+
+		getPlantParametersData: function() {
+			var that = this;
+			var oModel = this.getOwnerComponent().getModel("Z_INF_VEND_ANAL_SRV");
+			var oPlantModel = this.getOwnerComponent().getModel("plantData");
+			var sUrl = "/plant_F4Set";
+
+			return new Promise(function(resolve, reject) {
+				if (!oModel || !oPlantModel) {
+					reject("Could not access required models for fetching Plant Data.");
+					return;
+				}
+
+				oModel.read(sUrl, {
+					success: function(oResponse) {
+						var aResults = oResponse && oResponse.results ? oResponse.results : [];
+						oPlantModel.setData(aResults || []);
+						console.log("Plant data loaded:", aResults);
+						resolve();
+					},
+					error: function(oError) {
+						console.error("Error fetching Plant data:", oError);
+						reject("Failed to fetch Plant data.");
 					}
 				});
 			});
@@ -845,6 +872,53 @@ sap.ui.define([
 				})
 				.catch(function(err) {
 					sap.m.MessageBox.error(err || "Failed to fetch Vendor Group data.");
+				})
+				.finally(function() {
+					sap.ui.core.BusyIndicator.hide();
+				});
+		},
+
+		handleValuePlantMaster: function(oEvent) {
+			var that = this;
+			this._PlantInputId = oEvent.getSource().getId();
+
+			var oPlantModel = this.getOwnerComponent().getModel("plantData");
+			this._resetCacheOnFilterChange();
+
+			// 🧩 Create dialog once
+			if (!this._oPlantDialog) {
+				this._oPlantDialog = sap.ui.xmlfragment(
+					this.getView().getId() + "PlantDialog",
+					"com.infocus.vendorAdvance.view.dialogComponent.DialogPlant",
+					this
+				);
+				this._oPlantDialog.setModel(oPlantModel, "plantData");
+				this.getView().addDependent(this._oPlantDialog);
+			}
+
+			// 🌀 Show busy indicator before loading data
+			sap.ui.core.BusyIndicator.show(0);
+
+			// 🧠 Normalize existing data safely
+			var aExistingData = oPlantModel.getData();
+			if (!Array.isArray(aExistingData)) {
+				if (aExistingData && typeof aExistingData === "object") {
+					aExistingData = Object.values(aExistingData);
+				} else {
+					aExistingData = [];
+				}
+			}
+
+			// 📡 Fetch data only if model is empty
+			var pDataPromise = (aExistingData.length === 0) ? this.getPlantParametersData() : Promise.resolve();
+
+			// ✅ Once done, open the dialog
+			pDataPromise
+				.then(function() {
+					that._oPlantDialog.open();
+				})
+				.catch(function(err) {
+					sap.m.MessageBox.error(err || "Failed to fetch Plant data.");
 				})
 				.finally(function() {
 					sap.ui.core.BusyIndicator.hide();
@@ -3334,6 +3408,130 @@ sap.ui.define([
 			});
 		},
 
+		/*************** Plant Handling *****************/
+
+		onToggleSelectAllPlant: function(oEvent) {
+			var oButton = oEvent.getSource();
+			var sFragmentId = this.getView().getId() + "PlantDialog";
+			var oList = Fragment.byId(sFragmentId, "idPlantList");
+
+			if (!oList) return;
+
+			var bSelectAll = oButton.getText() === "Select All";
+			oList.getItems().forEach(function(oItem) {
+				oItem.setSelected(bSelectAll);
+			});
+
+			oButton.setText(bSelectAll ? "Deselect All" : "Select All");
+
+			this._updateSelectedPlants(oList);
+		},
+
+		onSelectionChangePlant: function(oEvent) {
+			var oList = oEvent.getSource();
+			this._updateSelectedPlants(oList);
+		},
+
+		_updateSelectedPlants: function(oList) {
+			var oGlobalModel = this.getOwnerComponent().getModel("globalData");
+			var aSelectedIDs = [];
+			var aSelectedNames = [];
+
+			oList.getItems().forEach(function(oItem) {
+				if (oItem.getSelected()) {
+					aSelectedIDs.push(oItem.getTitle()); // plant
+					aSelectedNames.push(oItem.getDescription()); // plant name
+				}
+			});
+
+			oGlobalModel.setProperty("/selectedPlantIDs", aSelectedIDs);
+			oGlobalModel.setProperty("/selectedPlantNames", aSelectedNames);
+			oGlobalModel.setProperty("/selectedPlantDisplay", aSelectedIDs.join(", "));
+
+			var sFragmentId = this.getView().getId() + "PlantDialog";
+			var oSelectAllBtn = Fragment.byId(sFragmentId, "idSelectAllPlantBtn");
+
+			if (oSelectAllBtn) {
+				if (oList.getItems().length > 0 && aSelectedIDs.length === oList.getItems().length) {
+					oSelectAllBtn.setText("Deselect All");
+				} else {
+					oSelectAllBtn.setText("Select All");
+				}
+			}
+		},
+
+		onConfirmPlant: function() {
+			var oGlobalModel = this.getOwnerComponent().getModel("globalData");
+			var sDisplay = oGlobalModel.getProperty("/selectedPlantDisplay") || "";
+
+			// Update display field (change ID if needed)
+			this.byId("_plantInputId").setValue(sDisplay);
+
+			console.log("Confirmed Plants:", oGlobalModel.getProperty("/selectedPlantIDs"));
+			console.log("Confirmed Plant Names:", oGlobalModel.getProperty("/selectedPlantNames"));
+			console.log("Display:", sDisplay);
+
+			oGlobalModel.refresh(true);
+			this._resetPlantDialog();
+			this._oPlantDialog.close();
+		},
+
+		onClosePlant: function() {
+			var oGlobalModel = this.getOwnerComponent().getModel("globalData");
+			oGlobalModel.setProperty("/selectedPlantIDs", []);
+			oGlobalModel.setProperty("/selectedPlantNames", []);
+			oGlobalModel.setProperty("/selectedPlantDisplay", "");
+			// Clear the input field UI
+			this.byId("_plantInputId").setValue("");
+
+			this._resetPlantDialog();
+			this._oPlantDialog.close();
+		},
+
+		_resetPlantDialog: function() {
+			var sFragmentId = this.getView().getId() + "PlantDialog";
+			var oList = Fragment.byId(sFragmentId, "idPlantList");
+			var oSearchField = Fragment.byId(sFragmentId, "idPlantSearchField");
+			var oSelectAllBtn = Fragment.byId(sFragmentId, "idSelectAllPlantBtn");
+
+			if (oSearchField) {
+				oSearchField.setValue("");
+				this.onSearchPlant({
+					getParameter: function() {
+						return "";
+					}
+				});
+			}
+
+			if (oList) {
+				oList.getItems().forEach(function(oItem) {
+					oItem.setSelected(false);
+				});
+			}
+
+			if (oSelectAllBtn) {
+				oSelectAllBtn.setText("Select All");
+			}
+		},
+
+		onSearchPlant: function(oEvent) {
+			var sValue = oEvent.getParameter("newValue") || "";
+			var sFragmentId = this.getView().getId() + "PlantDialog";
+			var oList = Fragment.byId(sFragmentId, "idPlantList");
+
+			if (!oList) return;
+
+			oList.getItems().forEach(function(oItem) {
+				var sTitle = oItem.getTitle() || "";
+				var sDesc = oItem.getDescription() || "";
+				var bVisible =
+					sTitle.toLowerCase().includes(sValue.toLowerCase()) ||
+					sDesc.toLowerCase().includes(sValue.toLowerCase());
+
+				oItem.setVisible(bVisible);
+			});
+		},
+
 		onVenderDateChange: function(oEvent) {
 			var oDatePicker = oEvent.getSource();
 			var sValue = oEvent.getParameter("value"); // raw value from DatePicker
@@ -3685,6 +3883,7 @@ sap.ui.define([
 							"_companyCodeInputId",
 							"_VenderInputId",
 							"_accountGroupId",
+							"_plantInputId",
 							"_venderDatePickerId",
 							"_reportTypeSelect"
 						];
@@ -3731,6 +3930,7 @@ sap.ui.define([
 							"venderMasterData",
 							"companyCodeMasterData",
 							"accountGroupData",
+							"plantData",
 							"vendorAdvanceData",
 							"totalVendorAdvanceData",
 							"top10VendorAdvanceData",

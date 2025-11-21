@@ -37,6 +37,14 @@
                     "odataVersion": "2.0",
                     "localUri": "localService/ZVENDOR_summary_SRV/metadata.xml"
                 }
+            },
+            "Z_INF_VEND_ANAL_SRV": {
+                "uri": "/sap/opu/odata/sap/Z_INF_VEND_ANAL_SRV/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "localService/Z_INF_VEND_ANAL_SRV/metadata.xml"
+                }
             }
         }
     },
@@ -104,8 +112,9 @@
                     "defaultBindingMode": "TwoWay"
                 }
             },
-            "ZVENDOR_summary_SRV": {
-                "dataSource": "ZVENDOR_summary_SRV",
+            
+            "Z_INF_VEND_ANAL_SRV": {
+                "dataSource": "Z_INF_VEND_ANAL_SRV",
                 "settings": {
                     "useBatch": false,
                     "defaultBindingMode": "TwoWay"
@@ -128,6 +137,9 @@
             },
             "accountGroupData": {
                 "type": "sap.ui.model.json.JSONModel"
+            },
+            "plantData":{
+            	"type": "sap.ui.model.json.JSONModel"
             },
             "vendorAdvanceData": {
                 "type": "sap.ui.model.json.JSONModel"
