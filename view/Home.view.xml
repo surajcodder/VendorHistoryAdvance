@@ -23,7 +23,8 @@
 						</RadioButtonGroup>
 					</FlexBox>-->
 					<!-- Input Fields Section -->
-					<FlexBox width="auto" id="inputBoxes" wrap="NoWrap" justifyContent="Center" alignItems="Center">
+					<FlexBox width="auto" id="inputBoxes" wrap="NoWrap" justifyContent="Center" alignItems="Center"
+						class="filtersCompact sapUiTinyMarginTop sapUiSizeCompact">
 						<HBox id="companyCodeMasterBox" direction="Column" alignItems="Center" visible="true" class="sapUiTinyMarginBegin">
 							<Input id="_companyCodeInputId" type="Text" tooltip="Select from list" placeholder="Company Code" class="boldText roundedInput"
 								showValueHelp="true" showClearIcon="true" value="{globalData>/selectedCompanyCodeNamesDisplay}"
@@ -38,6 +39,11 @@
 							<Input id="_accountGroupId" type="Text" tooltip="Select from list" placeholder="Account Group" class="boldText roundedInput"
 								showValueHelp="true" showClearIcon="true" value="{globalData>/selectedAccountGroupDisplay}" valueHelpRequest="handleValueAccountGroup"
 								required="true" valueHelpOnly="true"/>
+						</HBox>
+						<HBox id="plantMasterBox" direction="Column" alignItems="Center" visible="true" class="sapUiTinyMarginBegin">
+							<Input id="_plantInputId" type="Text" tooltip="Select from list" placeholder="Plant" class="boldText roundedInput" showValueHelp="true"
+								showClearIcon="true" value="{globalData>/selectedPlantNamesDisplay}" valueHelpRequest="handleValuePlantMaster" required="true"
+								valueHelpOnly="true"/>
 						</HBox>
 						<HBox id="venderDatePickerBox" direction="Column" alignItems="Center" visible="true" class="sapUiTinyMarginBegin">
 							<DatePicker id="_venderDatePickerId" value="{globalData>/selectedVenderDate}" placeholder="Select Due Date" required="true"
@@ -73,8 +79,9 @@
 			<Panel id="panel1" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
 				<content>
 					<!-- IconTabBar for switching between scenarios -->
-					<IconTabBar id="iconTabBar1" selectedKey="{globalData>/selectedStillToBeDeliveredTabKey}" select="onTabSelectPanel1" stretchContentHeight="true" class="beautifulTabBar"
-						expandable="false" upperCase="false" applyContentPadding="false" showOverflowSelectList="false">
+					<IconTabBar id="iconTabBar1" selectedKey="{globalData>/selectedStillToBeDeliveredTabKey}" select="onTabSelectPanel1"
+						stretchContentHeight="true" class="beautifulTabBar" expandable="false" upperCase="false" applyContentPadding="false"
+						showOverflowSelectList="false">
 						<items>
 							<!-- Scenario 1 -->
 							<IconTabFilter key="scenario1" text="Still to be Delivered" icon="sap-icon://shipping-status" tooltip="Still to be Delivered"
@@ -98,7 +105,8 @@
 			<Panel id="panel2" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
 				<content>
 					<!-- IconTabBar for switching between scenarios -->
-					<IconTabBar id="iconTabBar2" selectedKey="{globalData>/selectedVendorAdvanceTabKey}" select="onTabSelectPanel2" stretchContentHeight="true" class="beautifulTabBar">
+					<IconTabBar id="iconTabBar2" selectedKey="{globalData>/selectedVendorAdvanceTabKey}" select="onTabSelectPanel2" stretchContentHeight="true"
+						class="beautifulTabBar">
 						<items>
 							<!-- Scenario 2 -->
 							<IconTabFilter key="scenario2" text="Vendor Advance" icon="sap-icon://customer" tooltip="Vendor Advance" design="Horizontal">
@@ -146,7 +154,8 @@
 			<Panel id="panel3" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
 				<content>
 					<!-- IconTabBar for switching between scenarios -->
-					<IconTabBar id="iconTabBar3" selectedKey="{globalData>/selectedCreditorTabKey}" select="onTabSelectPanel3" stretchContentHeight="true" class="beautifulTabBar">
+					<IconTabBar id="iconTabBar3" selectedKey="{globalData>/selectedCreditorTabKey}" select="onTabSelectPanel3" stretchContentHeight="true"
+						class="beautifulTabBar">
 						<items>
 							<!-- Scenario 5 -->
 							<IconTabFilter key="scenario5" text="Creditors" icon="sap-icon://wallet" tooltip="Creditors" iconColor="Negative" design="Horizontal">
@@ -194,7 +203,8 @@
 			<Panel id="panel4" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
 				<content>
 					<!-- IconTabBar for switching between scenarios -->
-					<IconTabBar id="iconTabBar4" selectedKey="{globalData>/selectedLetterOfCreditTabKey}" select="onTabSelectPanel4" stretchContentHeight="true" class="beautifulTabBar">
+					<IconTabBar id="iconTabBar4" selectedKey="{globalData>/selectedLetterOfCreditTabKey}" select="onTabSelectPanel4" stretchContentHeight="true"
+						class="beautifulTabBar">
 						<items>
 							<!-- Scenario 8 -->
 							<IconTabFilter key="scenario8" text="Letter Of Credit" icon="sap-icon://letter" tooltip="Letter Of Credit" iconColor="Negative"
@@ -227,7 +237,8 @@
 								iconColor="Negative" design="Horizontal">
 								<content>
 									<VBox visible="{globalData>/isChartFragment10Visible}">
-										<core:Fragment id="chartFragment10" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Letter_of_Credit.ChartFragment10" type="XML"/>
+										<core:Fragment id="chartFragment10" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Letter_of_Credit.ChartFragment10"
+											type="XML"/>
 									</VBox>
 									<!--<VBox visible="{globalData>/isChartFragment8Visible}">-->
 									<!--	<core:Fragment id="chartFragment8" fragmentName="com.infocus.purchaseApplication.view.fragments.Charts.ChartFragment8" type="XML"/>-->
@@ -243,7 +254,8 @@
 			<Panel id="panel5" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
 				<content>
 					<!-- IconTabBar for switching between scenarios -->
-					<IconTabBar id="iconTabBar5"  selectedKey="{globalData>/selectedFactoringTabKey}" select="onTabSelectPanel5" stretchContentHeight="true" class="beautifulTabBar">
+					<IconTabBar id="iconTabBar5" selectedKey="{globalData>/selectedFactoringTabKey}" select="onTabSelectPanel5" stretchContentHeight="true"
+						class="beautifulTabBar">
 						<items>
 							<!-- Scenario 11 -->
 							<IconTabFilter key="scenario11" text="Factoring" icon="sap-icon://money-bills" tooltip="Factoring" iconColor="Negative" design="Horizontal">
@@ -291,7 +303,8 @@
 			<Panel id="panel6" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
 				<content>
 					<!-- IconTabBar for switching between scenarios -->
-					<IconTabBar id="iconTabBar6" selectedKey="{globalData>/selectedRXILTabKey}" select="onTabSelectPanel6" stretchContentHeight="true" class="beautifulTabBar">
+					<IconTabBar id="iconTabBar6" selectedKey="{globalData>/selectedRXILTabKey}" select="onTabSelectPanel6" stretchContentHeight="true"
+						class="beautifulTabBar">
 						<items>
 							<!-- Scenario 14 -->
 							<IconTabFilter key="scenario14" text="RXIL" icon="sap-icon://business-objects-experience" tooltip="RXIL" iconColor="Negative"
@@ -339,7 +352,8 @@
 			<Panel id="panel7" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
 				<content>
 					<!-- IconTabBar for switching between scenarios -->
-					<IconTabBar id="iconTabBar7" selectedKey="{globalData>/selectedABGTabKey}" select="onTabSelectPanel7" stretchContentHeight="true" class="beautifulTabBar">
+					<IconTabBar id="iconTabBar7" selectedKey="{globalData>/selectedABGTabKey}" select="onTabSelectPanel7" stretchContentHeight="true"
+						class="beautifulTabBar">
 						<items>
 							<!-- Scenario 17 -->
 							<IconTabFilter key="scenario17" text="ABG" icon="sap-icon://building" tooltip="ABG" iconColor="Negative" design="Horizontal">
@@ -385,7 +399,8 @@
 			<Panel id="panel8" expandable="false" expanded="false" class="sapUiResponsiveMargin" backgroundDesign="Solid" width="auto" height="100%">
 				<content>
 					<!-- IconTabBar for switching between scenarios -->
-					<IconTabBar id="iconTabBar8" selectedKey="{globalData>/selectedPBGTabKey}" select="onTabSelectPanel8" stretchContentHeight="true" class="beautifulTabBar">
+					<IconTabBar id="iconTabBar8" selectedKey="{globalData>/selectedPBGTabKey}" select="onTabSelectPanel8" stretchContentHeight="true"
+						class="beautifulTabBar">
 						<items>
 							<!-- Scenario 20 -->
 							<IconTabFilter key="scenario20" text="PBG" icon="sap-icon://shield" tooltip="PBG" iconColor="Negative" design="Horizontal">
@@ -435,7 +450,8 @@
 							<IconTabFilter key="summaryTab" text="Summary" icon="sap-icon://overview-chart" iconColor="Negative" tooltip="Summary" design="Horizontal">
 								<content>
 									<VBox visible="{globalData>/isChartFragmentSummaryVisible}">
-										<core:Fragment id="chartFragmentSummary" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Summary.ChartFragmentSummary" type="XML"/>
+										<core:Fragment id="chartFragmentSummary" fragmentName="com.infocus.vendorAdvance.view.fragments.Charts.Summary.ChartFragmentSummary"
+											type="XML"/>
 									</VBox>
 								</content>
 							</IconTabFilter>
